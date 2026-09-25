@@ -1,0 +1,28 @@
+/*
+ * Exemple de CSS Module : c'est la convention de style retenue pour ce projet.
+ * Un fichier `*.module.css` par composant, et uniquement des variables issues
+ * de `styles/design-tokens.css` — jamais de valeur brute.
+ */
+
+.skipLink {
+  position: absolute;
+  left: var(--space-2);
+  top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transform: translateY(-200%);
+}
+
+.skipLink:focus-visible {
+  transform: translateY(0);
+}
+
+.header {
+  padding: var(--space-3) var(--space-4);
+}
+
+.footer {
+  padding: var(--space-5) var(--space-4);
+}

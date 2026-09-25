@@ -1,0 +1,12 @@
+# En-têtes de sécurité — audit FRO-4 (S-02).
+# Cloudflare Pages lit ce fichier automatiquement ; Vite le copie tel quel dans dist/.
+#
+# Pour élargir la politique (formulaire de contact tiers, polices ou images
+# externes), ajouter l'origine à la directive concernée — connect-src,
+# form-action, font-src, img-src — et NON à default-src.
+/*
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
