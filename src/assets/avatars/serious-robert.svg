@@ -1,0 +1,24 @@
+<!-- Avatar Serious Robert — lunettes noires et bouclier de la cybersécurité. Charte FRO-18. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="sr-title">
+  <title id="sr-title">Avatar de Serious Robert, une grenouille à lunettes noires derrière un bouclier</title>
+  <circle cx="60" cy="60" r="60" fill="#d7ebd9" />
+  <ellipse cx="60" cy="104" rx="36" ry="8" fill="#15653f" opacity="0.14" />
+  <!-- Bulbes oculaires -->
+  <circle cx="41" cy="46" r="14" fill="#1b5e40" />
+  <circle cx="79" cy="46" r="14" fill="#1b5e40" />
+  <!-- Lunettes noires : la seule paire d'yeux du site qu'on ne voit pas -->
+  <path d="M25 42h70v4H25z" fill="#0b2019" />
+  <rect x="27" y="40" width="28" height="15" rx="6" fill="#123a2a" />
+  <rect x="65" y="40" width="28" height="15" rx="6" fill="#123a2a" />
+  <path d="M31 44h8" stroke="#8fe0b4" stroke-width="2.5" stroke-linecap="round" opacity="0.8" />
+  <path d="M69 44h8" stroke="#8fe0b4" stroke-width="2.5" stroke-linecap="round" opacity="0.8" />
+  <!-- Tête -->
+  <path d="M60 46c-19 0-33 12-33 28 0 15 15 24 33 24s33-9 33-24c0-16-14-28-33-28Z" fill="#123a2a" />
+  <path d="M60 78c-11 0-20 4-24 10 5 6 14 10 24 10s19-4 24-10c-4-6-13-10-24-10Z" fill="#8fe0b4" opacity="0.4" />
+  <path d="M44 74h32" stroke="#0b2019" stroke-width="3.5" stroke-linecap="round" />
+  <!-- Bouclier, en bas à droite -->
+  <g transform="translate(92 88)">
+    <path d="M0-16c6 3 12 4 16 4v10c0 10-7 17-16 22-9-5-16-12-16-22v-10c4 0 10-1 16-4Z" fill="#ffd166" stroke="#8a5a00" stroke-width="2.5" transform="scale(0.78)" />
+    <path d="M-5 1l4 4 7-8" fill="none" stroke="#0e4b2e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+</svg>

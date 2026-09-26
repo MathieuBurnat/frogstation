@@ -1,0 +1,30 @@
+<!-- Avatar Mr. Gloop — béret et crayon du graphiste-rédacteur. Charte FRO-18. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="mg-title">
+  <title id="mg-title">Avatar de Mr. Gloop, une grenouille en béret avec un crayon sur l'oreille</title>
+  <circle cx="60" cy="60" r="60" fill="#fbe7ee" />
+  <ellipse cx="60" cy="104" rx="36" ry="8" fill="#15653f" opacity="0.14" />
+  <!-- Crayon glissé derrière l'œil droit -->
+  <g transform="rotate(24 92 40)">
+    <rect x="86" y="12" width="7" height="30" rx="2" fill="#ffd166" />
+    <path d="M86 42h7l-3.5 8Z" fill="#8a5a00" />
+    <rect x="86" y="12" width="7" height="5" rx="2" fill="#b0175e" />
+  </g>
+  <!-- Bulbes oculaires -->
+  <circle cx="41" cy="46" r="14" fill="#35906a" />
+  <circle cx="79" cy="46" r="14" fill="#35906a" />
+  <circle cx="41" cy="45" r="8.5" fill="#ffffff" />
+  <circle cx="79" cy="45" r="8.5" fill="#ffffff" />
+  <circle cx="43" cy="46.5" r="4.2" fill="#10231a" />
+  <circle cx="81" cy="46.5" r="4.2" fill="#10231a" />
+  <circle cx="40" cy="43" r="1.6" fill="#ffffff" />
+  <circle cx="78" cy="43" r="1.6" fill="#ffffff" />
+  <!-- Béret -->
+  <path d="M28 40c0-13 14-22 32-22s32 9 32 20c0 5-5 7-12 5-9-3-16-5-26-4s-18 4-22 5-4-2-4-4Z" fill="#b0175e" />
+  <circle cx="60" cy="15" r="4" fill="#8e1550" />
+  <!-- Tête -->
+  <path d="M60 46c-19 0-33 12-33 28 0 15 15 24 33 24s33-9 33-24c0-16-14-28-33-28Z" fill="#2e7d5b" />
+  <path d="M60 78c-11 0-20 4-24 10 5 6 14 10 24 10s19-4 24-10c-4-6-13-10-24-10Z" fill="#8fe0b4" opacity="0.5" />
+  <path d="M40 74c5 8 22 9 30 1" fill="none" stroke="#0b2019" stroke-width="3" stroke-linecap="round" />
+  <circle cx="34" cy="72" r="3.4" fill="#b0175e" opacity="0.5" />
+  <circle cx="86" cy="72" r="3.4" fill="#b0175e" opacity="0.5" />
+</svg>
