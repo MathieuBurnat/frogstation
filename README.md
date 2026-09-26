@@ -9,12 +9,17 @@ professionnel.
 
 ## Démarrer en local
 
-Prérequis : Node.js 20+ et npm.
+Prérequis : la version de Node.js fixée dans [`.nvmrc`](.nvmrc) (`nvm use` ou
+`mise install`) et npm. La CI lit ce même fichier — il n'y a donc qu'un seul
+endroit où la version de Node est décidée.
 
 ```bash
-npm install     # installer les dépendances
+npm ci          # installer exactement les versions du lockfile
 npm run dev     # serveur de dev Vite, http://localhost:5173
 ```
+
+`npm install` fonctionne aussi en local, mais `npm ci` est préférable : il
+reproduit à l'identique ce que fait la CI.
 
 ## Vérifier et builder
 
@@ -29,38 +34,124 @@ npm run preview     # servir dist/ localement
 Le build produit deux pages : `dist/index.html` (le site) et `dist/404.html`
 (la page 404 personnalisée).
 
-## Déploiement
+## CI/CD
 
-Cible : **Cloudflare** via `wrangler` / `cloudflare/wrangler-action`, piloté par
-GitHub Actions.
+Un seul workflow : [`.github/workflows/ci.yml`](.github/workflows/ci.yml), quatre
+jobs.
 
-- chaque pull request : install, lint, typecheck, `npm audit`, build, puis
-  déploiement d'une **préversion** ;
-- merge sur `main` : déploiement en **production**.
+```
+verify ─┬─► deploy-preview      (pull request)
+ gate  ─┴─► deploy-production   (push sur main)
+```
 
-La commande d'installation du build doit être **`npm ci`**, jamais
-`npm install` : `npm ci` installe exactement les versions figées dans
-`package-lock.json` et échoue si le lockfile et le `package.json` divergent.
+| Job                 | Déclencheur              | Ce qu'il fait |
+| ------------------- | ------------------------ | ------------- |
+| `verify`            | chaque PR + chaque push sur `main` | `npm ci` → `npm audit --audit-level=high` → `npm run typecheck` → `npm run lint` → `npm run build`, puis contrôle que `dist/index.html`, `dist/404.html` et `dist/_headers` existent, et publie `dist/` comme artefact |
+| `gate`              | idem                     | vérifie que les secrets Cloudflare sont renseignés (présence seulement, aucune valeur affichée) |
+| `deploy-preview`    | PR du dépôt lui-même     | déploie une **préversion** et poste son URL en commentaire de PR |
+| `deploy-production` | push sur `main`          | déploie en **production** |
 
-Les en-têtes de sécurité sont versionnés dans **`public/_headers`** (Vite le
-copie tel quel dans `dist/`). Cloudflare **Pages** le lit automatiquement ; si
-le déploiement passe par **Workers + assets statiques**, ce fichier n'est pas
-interprété et les mêmes en-têtes doivent être reproduits dans la configuration
-du Worker.
+Les jobs de déploiement **réutilisent l'artefact `dist` produit par `verify`** :
+on publie exactement ce qui a été vérifié, sans rebuild. Un échec de `verify`
+fait échouer la PR et empêche tout déploiement.
+
+La commande d'installation est **`npm ci`**, jamais `npm install` : `npm ci`
+installe exactement les versions figées dans `package-lock.json` et échoue si le
+lockfile et le `package.json` divergent.
+
+### Pourquoi Workers et non Pages
+
+Le déploiement passe par **Cloudflare Workers avec assets statiques**, configuré
+dans [`wrangler.toml`](wrangler.toml) :
+
+- Workers est la cible recommandée par Cloudflare pour les nouveaux projets ;
+  Pages n'accueille plus de nouvelles fonctionnalités.
+- Toute la configuration de déploiement est **versionnée dans le dépôt**, donc
+  relisible en revue de code, au lieu d'être enfouie dans l'état d'un projet
+  côté tableau de bord.
+- `not_found_handling = "404-page"` sert `404.html` avec un **vrai statut HTTP
+  404** pour tout chemin inconnu — ce qu'un routeur côté client ne sait pas faire.
+- Les assets statiques Workers **lisent `dist/_headers`**, donc les en-têtes de
+  sécurité de l'audit FRO-4 restent appliqués sans duplication dans le Worker.
+  (C'était l'inconnue de l'arbitrage : c'est vérifié, voir ci-dessous.)
+- Les préversions par PR utilisent les **Workers Previews nommées**
+  (`wrangler preview --name pr-<numéro>`), qui donnent une URL stable par PR.
+
+### Vérifier le déploiement en local, sans token
+
+Le runtime Cloudflare (`workerd`) tourne en local : la 404 et les en-têtes se
+vérifient **sans aucun secret**.
+
+```bash
+npm run build
+npx wrangler dev --port 8788          # sert dist/ via le vrai runtime Workers
+
+curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:8788/nope   # -> 404
+curl -sD- -o /dev/null http://127.0.0.1:8788/ | grep -i content-security-policy
+```
+
+Résultat attendu, et effectivement constaté : statut **404** sur un chemin
+inconnu avec le corps de `404.html`, et les cinq en-têtes de `public/_headers`
+(CSP, HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`) présents sur les
+réponses 200 **et** 404. Wrangler journalise `Parsed 1 valid header rule`.
+
+`npx wrangler deploy --dry-run` valide `wrangler.toml` sans contacter Cloudflare
+et sans credentials.
 
 ### Secrets requis
 
 Ces valeurs ne doivent **jamais** apparaître en clair dans le dépôt, un
 commentaire, un log ou un fichier de configuration. Elles vivent uniquement dans
-**GitHub Secrets** (Settings → Secrets and variables → Actions) :
+**GitHub Secrets** (Settings → Secrets and variables → Actions → *New repository
+secret*) :
 
-| Secret                 | Usage                                             |
-| ---------------------- | ------------------------------------------------- |
-| `CLOUDFLARE_API_TOKEN` | Token Cloudflare limité au strict nécessaire pour publier le site |
-| `CLOUDFLARE_ACCOUNT_ID` | Identifiant du compte Cloudflare cible           |
+| Secret                  | Usage                                             |
+| ----------------------- | ------------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | Token Cloudflare limité au strict nécessaire pour publier le site |
+| `CLOUDFLARE_ACCOUNT_ID` | Identifiant du compte Cloudflare cible            |
 
 Le token Cloudflare doit être restreint aux seules permissions de déploiement du
-projet — pas un token global de compte.
+projet — **pas** un token global de compte. Côté Cloudflare (*My Profile → API
+Tokens → Create Token → Custom token*), les permissions nécessaires et
+suffisantes sont :
+
+| Portée  | Permission              | Niveau |
+| ------- | ----------------------- | ------ |
+| Account | Workers Scripts         | Edit   |
+| Account | Account Settings        | Read   |
+| User    | User Details            | Read   |
+
+`Account Settings: Read` sert seulement à résoudre le compte ; aucune permission
+DNS, Zone, R2, KV ou D1 n'est requise pour ce site statique.
+
+`CLOUDFLARE_ACCOUNT_ID` se lit dans l'URL du tableau de bord Cloudflare
+(`dash.cloudflare.com/<account-id>`) ou via `npx wrangler whoami`.
+
+#### Tant que les secrets sont absents
+
+Le job `gate` teste leur présence et, s'ils manquent, **saute** les jobs de
+déploiement au lieu de faire échouer la CI : les PR restent vertes sur
+`verify`. Un `::notice::` le signale dans le résumé du run. Dès que les deux
+secrets sont enregistrés, le déploiement s'active **sans aucune modification de
+code** — le prochain run de PR publie une préversion, le prochain merge sur
+`main` publie en production.
+
+#### Bonnes pratiques appliquées dans le workflow
+
+- `permissions:` explicites et minimales au niveau du workflow **et** de chaque
+  job ; aucun job n'a plus que ce qu'il lui faut, jamais de `write-all`.
+- **Toutes** les actions sont épinglées à un SHA de commit complet, avec la
+  version en commentaire. Dependabot met les SHA à jour.
+- Aucun `pull_request_target` : les secrets ne sont jamais exposés à du code non
+  fiable. `deploy-preview` est en plus explicitement restreint aux PR issues du
+  dépôt lui-même (`head.repo.full_name == github.repository`).
+- `persist-credentials: false` sur chaque `actions/checkout` : le token de la CI
+  ne reste pas dans la configuration git du runner.
+- Les valeurs dynamiques (URL de préversion, SHA) passent par des variables
+  d'environnement, jamais par interpolation `${{ }}` directe dans un `run` —
+  c'est le vecteur classique d'injection de script dans Actions.
+- Version de Wrangler figée (`WRANGLER_VERSION`) et télémétrie Wrangler
+  désactivée (`WRANGLER_SEND_METRICS: false`).
 
 ## Sécurité
 
