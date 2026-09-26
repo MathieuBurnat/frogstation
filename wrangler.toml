@@ -22,6 +22,18 @@ compatibility_date = "2026-09-01"
 workers_dev = true
 preview_urls = true
 
+# Build exécuté par wrangler juste avant le déploiement.
+#
+# C'est volontairement ici et pas seulement dans le workflow : `wrangler deploy`
+# devient auto-suffisant, donc identique depuis GitHub Actions, depuis un poste
+# de dev, et depuis Cloudflare Workers Builds (dont la commande de déploiement
+# par défaut est `npx wrangler deploy`, sans étape de build). Une seule
+# définition du build, valable partout.
+#
+# Les dépendances doivent être installées au préalable (`npm ci`).
+[build]
+command = "npm run build"
+
 [assets]
 # Sortie du build Vite (`npm run build`) : index.html, 404.html, assets/, _headers.
 directory = "./dist"

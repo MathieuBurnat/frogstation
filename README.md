@@ -46,14 +46,19 @@ verify ─┬─► deploy-preview      (pull request)
 
 | Job                 | Déclencheur              | Ce qu'il fait |
 | ------------------- | ------------------------ | ------------- |
-| `verify`            | chaque PR + chaque push sur `main` | `npm ci` → `npm audit --audit-level=high` → `npm run typecheck` → `npm run lint` → `npm run build`, puis contrôle que `dist/index.html`, `dist/404.html` et `dist/_headers` existent, et publie `dist/` comme artefact |
+| `verify`            | chaque PR + chaque push sur `main` | `npm ci` → `npm audit --audit-level=high` → `npm run typecheck` → `npm run lint` → `npm run build`, puis contrôle que `dist/index.html`, `dist/404.html` et `dist/_headers` existent, et publie `dist/` comme artefact (téléchargeable par la QA) |
 | `gate`              | idem                     | vérifie que les secrets Cloudflare sont renseignés (présence seulement, aucune valeur affichée) |
 | `deploy-preview`    | PR du dépôt lui-même     | déploie une **préversion** et poste son URL en commentaire de PR |
 | `deploy-production` | push sur `main`          | déploie en **production** |
 
-Les jobs de déploiement **réutilisent l'artefact `dist` produit par `verify`** :
-on publie exactement ce qui a été vérifié, sans rebuild. Un échec de `verify`
-fait échouer la PR et empêche tout déploiement.
+Un échec de `verify` fait échouer la PR et empêche tout déploiement.
+
+Les jobs de déploiement ne rejouent pas le build eux-mêmes : c'est **wrangler**
+qui l'exécute, via `[build] command = "npm run build"` dans `wrangler.toml`. Le
+build de déploiement est donc défini **à un seul endroit** et se comporte à
+l'identique depuis GitHub Actions, depuis un poste de dev
+(`npm ci && npx wrangler deploy`) et depuis Cloudflare Workers Builds — dont la
+commande de déploiement par défaut est `npx wrangler deploy`, sans étape de build.
 
 La commande d'installation est **`npm ci`**, jamais `npm install` : `npm ci`
 installe exactement les versions figées dans `package-lock.json` et échoue si le
@@ -136,6 +141,29 @@ secrets sont enregistrés, le déploiement s'active **sans aucune modification d
 code** — le prochain run de PR publie une préversion, le prochain merge sur
 `main` publie en production.
 
+### ⚠️ Deuxième chemin de déploiement : Cloudflare Workers Builds
+
+Une intégration **Cloudflare Workers Builds** (application GitHub
+`cloudflare-workers-and-pages`) est déjà connectée à ce dépôt, sur un Worker
+nommé `frogstation`. Elle publie un check `Workers Builds: frogstation` sur les
+PR et déploie **indépendamment** de GitHub Actions.
+
+Il y a donc aujourd'hui **deux chemins de déploiement**, ce qui n'est pas
+souhaitable : Workers Builds ne passe pas par `verify`, donc il peut déployer du
+code qui n'a pas franchi l'audit, le typecheck et le lint.
+
+`[build] command = "npm run build"` dans `wrangler.toml` rend `wrangler deploy`
+auto-suffisant, donc Workers Builds fonctionne aussi. Mais la décision « un seul
+chemin » demande un accès au tableau de bord Cloudflare, hors périmètre du dépôt.
+Deux options, à arbitrer :
+
+1. **Garder GitHub Actions** (recommandé) — désactiver les builds automatiques du
+   Worker `frogstation` côté Cloudflare (*Settings → Builds → Disconnect*). Les
+   déploiements restent conditionnés aux checks de la PR.
+2. **Garder Workers Builds** — retirer alors `deploy-preview` et
+   `deploy-production` du workflow et se passer du garde-fou « pas de déploiement
+   sans CI verte ».
+
 #### Bonnes pratiques appliquées dans le workflow
 
 - `permissions:` explicites et minimales au niveau du workflow **et** de chaque
@@ -169,12 +197,27 @@ En place dans le dépôt :
 | Garde-fous sur chaque PR : `npm ci` → `npm audit --audit-level=high` → typecheck → lint → build | `.github/workflows/ci.yml` |
 | Mises à jour hebdomadaires npm + GitHub Actions | `.github/dependabot.yml` |
 
-À activer côté GitHub (droits d'administration du dépôt requis) :
+Activé côté GitHub (FRO-19) :
 
-- [ ] **Secret Scanning + Push Protection** — *Settings → Code security* ;
-      gratuit sur dépôt public, bloque le push d'un secret détecté.
-- [ ] **Protection de `main`** — PR obligatoire, check `CI` obligatoire, pas de
-      force-push. À faire dès le premier commit poussé.
+- [x] **Secret Scanning + Push Protection** — bloque le push d'un secret détecté.
+- [x] **Dependabot alerts + security updates** — en complément des mises à jour
+      hebdomadaires de `.github/dependabot.yml`.
+- [x] **Protection de `main`** :
+
+  | Règle | Valeur |
+  | --- | --- |
+  | Pull request obligatoire | oui, pas de push direct |
+  | Reviews approuvées requises | 1 |
+  | Reviews périmées rejetées à un nouveau push | oui |
+  | Check de statut obligatoire | `verify` |
+  | Branche à jour avant merge | oui |
+  | Conversations résolues avant merge | oui |
+  | Force-push / suppression de branche | interdits |
+  | Application aux administrateurs | non — un admin garde une porte de sortie en cas d'incident |
+
+  ⚠️ Le check obligatoire est le **nom du job** `verify` dans
+  `.github/workflows/ci.yml`. Renommer ce job casse silencieusement la règle de
+  protection : il faut alors mettre à jour le contexte requis côté GitHub.
 
 Règles à respecter en écrivant le site :
 
@@ -238,7 +281,10 @@ chemins inconnus — ce qu'un routeur côté client ne peut pas faire.
 ```
 index.html              page principale
 404.html                page 404 (seconde entrée de build)
+wrangler.toml           cible de déploiement Cloudflare Workers
+.github/workflows/      CI/CD : vérification, préversion, production
 public/                 assets servis tels quels (favicon…)
+  _headers              en-têtes de sécurité, appliqués par Cloudflare
 src/
   main.tsx              point d'entrée de la page principale
   not-found.tsx         point d'entrée de la page 404

@@ -6,9 +6,13 @@
 #                   \-> deploy-production  (push sur main)
 #
 # Le déploiement dépend de `verify` : rien ne part vers Cloudflare sans que
-# l'audit, le typecheck, le lint et le build soient verts. `verify` produit
-# l'artefact `dist`, et les jobs de déploiement le réutilisent tel quel — on
-# publie exactement ce qui a été vérifié, on ne rebuild pas.
+# l'audit, le typecheck, le lint et le build soient verts.
+#
+# Les jobs de déploiement ne rejouent pas le build ici : c'est `wrangler` qui
+# l'exécute, via `[build] command` dans wrangler.toml. Le build de déploiement
+# est ainsi défini à un seul endroit, valable pour GitHub Actions, pour un poste
+# de dev et pour Cloudflare Workers Builds. `verify` publie tout de même dist/
+# comme artefact, pour que la QA puisse télécharger le build exact d'une PR.
 name: CI
 
 on:
@@ -79,6 +83,9 @@ jobs:
           done
           echo "dist/index.html, dist/404.html et dist/_headers sont présents."
 
+      # Pour que la QA puisse télécharger le build exact d'une PR. Les jobs de
+      # déploiement ne s'en servent pas : c'est wrangler qui rebuild (voir
+      # `[build] command` dans wrangler.toml).
       - name: Publier l'artefact dist
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -138,11 +145,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Récupérer l'artefact dist
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          name: dist
-          path: dist
+          node-version-file: .nvmrc
+          cache: npm
+
+      # Nécessaire pour que le `[build] command` de wrangler.toml puisse tourner.
+      - run: npm ci
 
       - name: Publier la préversion
         id: preview
@@ -198,11 +207,13 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Récupérer l'artefact dist
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          name: dist
-          path: dist
+          node-version-file: .nvmrc
+          cache: npm
+
+      # Nécessaire pour que le `[build] command` de wrangler.toml puisse tourner.
+      - run: npm ci
 
       - name: Déployer en production
         id: deploy
