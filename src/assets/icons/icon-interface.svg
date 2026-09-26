@@ -1,0 +1,10 @@
+<!-- Icône « Sites et interfaces » — fenêtre en feuille de nénuphar. Charte FRO-18.
+     Décorative : le titre de la carte porte le sens. Poser aria-hidden="true". -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M4 9.5A2.5 2.5 0 0 1 6.5 7h19A2.5 2.5 0 0 1 28 9.5v13a2.5 2.5 0 0 1-2.5 2.5h-19A2.5 2.5 0 0 1 4 22.5Z" />
+  <path d="M4 12h24" />
+  <circle cx="7.5" cy="9.5" r="0.9" fill="currentColor" stroke="none" />
+  <circle cx="10.5" cy="9.5" r="0.9" fill="currentColor" stroke="none" />
+  <path d="M9 16h7M9 20h11" />
+  <path d="M22 16.5c2.5 0 4 1.4 4 3s-1.5 3-4 3" />
+</svg>

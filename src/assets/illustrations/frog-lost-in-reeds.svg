@@ -1,0 +1,88 @@
+<!-- Illustration 404 — une grenouille perdue dans les roseaux. Charte FRO-18.
+     PORTEUSE DE SENS : conserver <title> et role="img", ne pas poser aria-hidden.
+     Couleurs : valeurs de la palette (voir document `charte`, inventaire SVG). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" role="img" aria-labelledby="reeds-title">
+  <title id="reeds-title">Une petite grenouille assise sur un nénuphar au milieu de grands roseaux, en train de scruter l'horizon</title>
+
+  <!-- Ciel de mare au petit matin -->
+  <rect width="480" height="320" fill="#eaf2e4" />
+  <circle cx="392" cy="62" r="30" fill="#ffd166" opacity="0.55" />
+
+  <!-- Eau -->
+  <path d="M0 214h480v106H0Z" fill="#123a2a" />
+  <path d="M0 214h480v18H0Z" fill="#15653f" opacity="0.55" />
+  <path d="M36 250c14-7 28-7 42 0M120 268c14-7 28-7 42 0M300 254c14-7 28-7 42 0M382 284c14-7 28-7 42 0" fill="none" stroke="#8fe0b4" stroke-width="3" stroke-linecap="round" opacity="0.4" />
+
+  <!-- Roseaux d'arrière-plan -->
+  <g stroke="#0e4b2e" stroke-linecap="round" fill="none" opacity="0.45">
+    <path d="M52 216C48 168 58 128 68 96" stroke-width="6" />
+    <path d="M96 218C94 172 88 136 78 104" stroke-width="5" />
+    <path d="M410 216c6-52-2-92-12-124" stroke-width="6" />
+    <path d="M370 218c2-46 10-82 20-114" stroke-width="5" />
+  </g>
+  <g fill="#0e4b2e" opacity="0.45">
+    <ellipse cx="68" cy="88" rx="7" ry="17" />
+    <ellipse cx="78" cy="96" rx="6" ry="15" />
+    <ellipse cx="398" cy="86" rx="7" ry="17" />
+    <ellipse cx="390" cy="98" rx="6" ry="15" />
+  </g>
+
+  <!-- Roseaux de premier plan -->
+  <g stroke="#15653f" stroke-linecap="round" fill="none">
+    <path d="M132 232c-6-60 4-106 16-146" stroke-width="8" />
+    <path d="M338 234c8-58 0-104-14-144" stroke-width="8" />
+    <path d="M300 236c4-40 0-70-8-96" stroke-width="6" />
+  </g>
+  <g fill="#15653f">
+    <ellipse cx="148" cy="78" rx="9" ry="22" />
+    <ellipse cx="324" cy="82" rx="9" ry="22" />
+    <ellipse cx="292" cy="132" rx="7" ry="18" />
+  </g>
+
+  <!-- Nénuphar, échancrure vers la droite -->
+  <path d="M240 258c-44 0-79-11-79-25 0-14 35-25 79-25 44 0 79 11 79 25 0 14-35 25-79 25Z" fill="#1b7a4d" />
+  <path d="M240 252c-38 0-68-9-68-19 0-10 30-19 68-19s68 9 68 19c0 10-30 19-68 19Z" fill="#8fe0b4" opacity="0.5" />
+  <path d="M244 214 300 236" stroke="#123a2a" stroke-width="4" stroke-linecap="round" opacity="0.35" fill="none" />
+
+  <!-- Grenouille assise, de trois quarts, regard vers le haut à droite -->
+  <g>
+    <!-- Pattes arrière -->
+    <path d="M204 230c-10 0-17-5-17-10 0-6 8-10 18-9l10 1-4 18Z" fill="#0e4b2e" />
+    <path d="M276 230c10 0 17-5 17-10 0-6-8-10-18-9l-10 1 4 18Z" fill="#0e4b2e" />
+    <!-- Corps -->
+    <path d="M240 158c-26 0-45 18-45 41 0 19 20 32 45 32s45-13 45-32c0-23-19-41-45-41Z" fill="#15653f" />
+    <!-- Ventre clair -->
+    <path d="M240 202c-15 0-27 5-32 13 6 9 19 15 32 15s26-6 32-15c-5-8-17-13-32-13Z" fill="#8fe0b4" opacity="0.55" />
+    <!-- Pattes avant -->
+    <path d="M216 224c-6 4-10 7-10 10 0 3 4 4 8 3l10-4Z" fill="#0e4b2e" />
+    <path d="M264 224c6 4 10 7 10 10 0 3-4 4-8 3l-10-4Z" fill="#0e4b2e" />
+    <!-- Yeux bulbeux -->
+    <circle cx="220" cy="155" r="16" fill="#1b7a4d" />
+    <circle cx="260" cy="155" r="16" fill="#1b7a4d" />
+    <circle cx="221" cy="154" r="10" fill="#ffffff" />
+    <circle cx="261" cy="154" r="10" fill="#ffffff" />
+    <!-- Pupilles décalées vers le haut à droite : elle cherche son chemin -->
+    <circle cx="225" cy="151" r="4.8" fill="#10231a" />
+    <circle cx="265" cy="151" r="4.8" fill="#10231a" />
+    <circle cx="218" cy="149" r="2" fill="#ffffff" />
+    <circle cx="258" cy="149" r="2" fill="#ffffff" />
+    <!-- Bouche perplexe -->
+    <path d="M226 190c5 5 23 5 28 0" fill="none" stroke="#0b2019" stroke-width="3.5" stroke-linecap="round" />
+    <!-- Joues -->
+    <circle cx="206" cy="186" r="4.5" fill="#b0175e" opacity="0.45" />
+    <circle cx="274" cy="186" r="4.5" fill="#b0175e" opacity="0.45" />
+  </g>
+
+  <!-- Point d'interrogation flottant : elle ne sait plus où elle est -->
+  <g fill="#b0175e">
+    <path d="M300 152c0-8 6-13 14-13 7 0 13 5 13 11 0 8-9 9-9 15h-8c0-8 9-9 9-14 0-3-2-5-5-5-3 0-5 2-5 6Z" />
+    <circle cx="314" cy="176" r="4.5" />
+  </g>
+
+  <!-- Libellule, clin d'œil à l'accent ambre -->
+  <g opacity="0.9">
+    <ellipse cx="108" cy="132" rx="14" ry="4" fill="#ffd166" opacity="0.6" transform="rotate(-18 108 132)" />
+    <ellipse cx="108" cy="138" rx="12" ry="3.5" fill="#ffd166" opacity="0.6" transform="rotate(16 108 138)" />
+    <path d="M100 135h20" stroke="#8a5a00" stroke-width="3" stroke-linecap="round" fill="none" />
+  </g>
+</svg>

@@ -1,0 +1,7 @@
+<!-- Icône « Qualité et accessibilité » — loupe posée sur une coche. Charte FRO-18.
+     Décorative : le titre de la carte porte le sens. Poser aria-hidden="true". -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="14" cy="14" r="9" />
+  <path d="M10 14.2l3 3 5.5-6" />
+  <path d="M20.5 20.5 28 28" />
+</svg>

@@ -1,0 +1,38 @@
+<!-- Avatar Nino Croaks — casquette et rouage du DevOps. Charte FRO-18. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="nc-title">
+  <title id="nc-title">Avatar de Nino Croaks, une grenouille en casquette ornée d'un rouage</title>
+  <circle cx="60" cy="60" r="60" fill="#eaf2e4" />
+  <ellipse cx="60" cy="104" rx="36" ry="8" fill="#15653f" opacity="0.14" />
+  <!-- Bulbes oculaires -->
+  <circle cx="41" cy="46" r="14" fill="#23885a" />
+  <circle cx="79" cy="46" r="14" fill="#23885a" />
+  <circle cx="41" cy="45" r="8.5" fill="#ffffff" />
+  <circle cx="79" cy="45" r="8.5" fill="#ffffff" />
+  <circle cx="42" cy="47" r="4.2" fill="#10231a" />
+  <circle cx="80" cy="47" r="4.2" fill="#10231a" />
+  <circle cx="39.5" cy="43" r="1.6" fill="#ffffff" />
+  <circle cx="77.5" cy="43" r="1.6" fill="#ffffff" />
+  <!-- Casquette + visière -->
+  <path d="M30 38c0-12 13-21 30-21s30 9 30 21c0 3-2 4-5 3-8-3-16-4-25-4s-17 1-25 4c-3 1-5 0-5-3Z" fill="#0e4b2e" />
+  <path d="M88 38c8 0 14 3 16 7H86Z" fill="#123a2a" />
+  <!-- Rouage brodé -->
+  <g transform="translate(60 27)">
+    <circle r="7.5" fill="#ffd166" />
+    <circle r="3" fill="#0e4b2e" />
+    <g fill="#ffd166">
+      <rect x="-1.8" y="-11" width="3.6" height="4" rx="1" />
+      <rect x="-1.8" y="7" width="3.6" height="4" rx="1" />
+      <rect x="-11" y="-1.8" width="4" height="3.6" rx="1" />
+      <rect x="7" y="-1.8" width="4" height="3.6" rx="1" />
+    </g>
+  </g>
+  <!-- Tête -->
+  <path d="M60 46c-19 0-33 12-33 28 0 15 15 24 33 24s33-9 33-24c0-16-14-28-33-28Z" fill="#1b6e4a" />
+  <path d="M60 78c-11 0-20 4-24 10 5 6 14 10 24 10s19-4 24-10c-4-6-13-10-24-10Z" fill="#8fe0b4" opacity="0.5" />
+  <path d="M41 73c7 8 31 8 38 0" fill="none" stroke="#0b2019" stroke-width="3" stroke-linecap="round" />
+  <!-- Trois conteneurs empilés, clin d'œil au déploiement -->
+  <g fill="none" stroke="#b0175e" stroke-width="3" stroke-linejoin="round">
+    <rect x="22" y="86" width="12" height="9" rx="2" />
+    <rect x="86" y="86" width="12" height="9" rx="2" />
+  </g>
+</svg>

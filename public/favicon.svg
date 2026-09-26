@@ -1,7 +1,16 @@
-<!-- PLACEHOLDER — remplacé par le favicon grenouille du Graphiste (FRO-3). -->
+<!-- Favicon Frogstation — tête de grenouille sur feuille de nénuphar. Charte FRO-18. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Frogstation">
-  <rect width="32" height="32" rx="8" fill="#3f3f46" />
-  <circle cx="11.5" cy="13" r="3" fill="#fff" />
-  <circle cx="20.5" cy="13" r="3" fill="#fff" />
-  <path d="M10 21c1.8 2.2 10.2 2.2 12 0" stroke="#fff" stroke-width="2.2" stroke-linecap="round" fill="none" />
+  <rect width="32" height="32" rx="8" fill="#15653f" />
+  <!-- Feuille de nénuphar, échancrure à droite -->
+  <path d="M16 27c-6.1 0-11-3.4-11-7.6 0-4.2 4.9-7.6 11-7.6 6.1 0 11 3.4 11 7.6 0 4.2-4.9 7.6-11 7.6Z" fill="#8fe0b4" opacity="0.22" />
+  <!-- Yeux -->
+  <circle cx="11" cy="12.5" r="5" fill="#8fe0b4" />
+  <circle cx="21" cy="12.5" r="5" fill="#8fe0b4" />
+  <circle cx="11" cy="12" r="3.1" fill="#ffffff" />
+  <circle cx="21" cy="12" r="3.1" fill="#ffffff" />
+  <circle cx="11.5" cy="12.5" r="1.7" fill="#0b2019" />
+  <circle cx="21.5" cy="12.5" r="1.7" fill="#0b2019" />
+  <!-- Museau + sourire -->
+  <path d="M16 13c-6 0-10 3.4-10 7.4 0 3.6 4.5 5.9 10 5.9s10-2.3 10-5.9C26 16.4 22 13 16 13Z" fill="#1b7a4d" />
+  <path d="M10.5 20.5c3 3.2 8 3.2 11 0" fill="none" stroke="#0b2019" stroke-width="1.9" stroke-linecap="round" />
 </svg>

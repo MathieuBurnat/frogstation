@@ -1,0 +1,24 @@
+<!-- Avatar Frog Master — couronne du chef d'opération. Charte FRO-18. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="fm-title">
+  <title id="fm-title">Avatar de Frog Master, une grenouille coiffée d'une petite couronne</title>
+  <circle cx="60" cy="60" r="60" fill="#d7ebd9" />
+  <ellipse cx="60" cy="104" rx="36" ry="8" fill="#15653f" opacity="0.14" />
+  <!-- Couronne -->
+  <path d="M40 30 44 18l8 8 8-11 8 11 8-8 4 12Z" fill="#ffd166" stroke="#8a5a00" stroke-width="2" stroke-linejoin="round" />
+  <circle cx="60" cy="16" r="2.6" fill="#b0175e" />
+  <!-- Bulbes oculaires -->
+  <circle cx="41" cy="46" r="14" fill="#1b7a4d" />
+  <circle cx="79" cy="46" r="14" fill="#1b7a4d" />
+  <circle cx="41" cy="45" r="8.5" fill="#ffffff" />
+  <circle cx="79" cy="45" r="8.5" fill="#ffffff" />
+  <circle cx="42.5" cy="46" r="4.2" fill="#10231a" />
+  <circle cx="80.5" cy="46" r="4.2" fill="#10231a" />
+  <circle cx="40" cy="43" r="1.6" fill="#ffffff" />
+  <circle cx="78" cy="43" r="1.6" fill="#ffffff" />
+  <!-- Tête -->
+  <path d="M60 46c-19 0-33 12-33 28 0 15 15 24 33 24s33-9 33-24c0-16-14-28-33-28Z" fill="#15653f" />
+  <path d="M60 78c-11 0-20 4-24 10 5 6 14 10 24 10s19-4 24-10c-4-6-13-10-24-10Z" fill="#8fe0b4" opacity="0.55" />
+  <path d="M40 74c6 7 34 7 40 0" fill="none" stroke="#0b2019" stroke-width="3" stroke-linecap="round" />
+  <circle cx="34" cy="72" r="3.4" fill="#b0175e" opacity="0.5" />
+  <circle cx="86" cy="72" r="3.4" fill="#b0175e" opacity="0.5" />
+</svg>
