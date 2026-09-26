@@ -1,0 +1,38 @@
+# Cible de déploiement : Cloudflare Workers avec assets statiques.
+#
+# Pourquoi Workers et non Pages (arbitrage DevOps, FRO-19) :
+#   - Workers est la cible recommandée par Cloudflare pour les nouveaux projets ;
+#     Pages n'accueille plus de nouvelles fonctionnalités.
+#   - Toute la configuration de déploiement est versionnée ici, donc relisible en
+#     revue de code — et non enfouie dans l'état d'un projet côté tableau de bord.
+#   - `not_found_handling = "404-page"` sert `404.html` avec un **vrai statut HTTP
+#     404** pour tout chemin inconnu, ce qu'aucun routeur côté client ne sait faire.
+#   - Les assets statiques Workers lisent `dist/_headers` (et `_redirects`), donc
+#     les en-têtes de sécurité de l'audit FRO-4 restent appliqués tels quels.
+#   - Les préversions par PR passent par les Workers Previews nommées
+#     (`wrangler preview --name pr-<n>`), qui donnent une URL stable par PR.
+#
+# Ce Worker n'a pas de champ `main` : c'est un Worker « assets-only », il ne
+# contient aucun code serveur. Le site est purement statique.
+
+name = "frogstation"
+compatibility_date = "2026-09-01"
+
+# Publie sur le sous-domaine *.workers.dev et active les URLs de préversion.
+workers_dev = true
+preview_urls = true
+
+[assets]
+# Sortie du build Vite (`npm run build`) : index.html, 404.html, assets/, _headers.
+directory = "./dist"
+
+# Chemin inconnu -> dist/404.html servie avec le statut HTTP 404.
+not_found_handling = "404-page"
+
+# Un chemin qui correspond exactement à un asset est servi tel quel ; sinon on
+# retombe sur `not_found_handling`. Pas de réécriture vers index.html : le site
+# n'a pas de routeur côté client (cf. README, « Décisions techniques »).
+html_handling = "auto-trailing-slash"
+
+[observability]
+enabled = true
