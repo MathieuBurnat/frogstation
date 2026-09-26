@@ -1,0 +1,26 @@
+{
+  // Déploiement Cloudflare du site vitrine — arbitrage R-01 de FRO-23,
+  // détaillé dans documents/adr/0001-cloudflare-workers-plutot-que-pages.md.
+  //
+  // Worker servant uniquement des assets statiques : aucune clé `main`, donc
+  // aucun code de Worker. Conséquence voulue : *toutes* les réponses sont des
+  // réponses d'assets statiques, et public/_headers s'y applique (Cloudflare
+  // exclut explicitement les réponses générées par du code de Worker).
+  //
+  // ⚠️ Ajouter un `main` plus tard imposerait de reposer les en-têtes de
+  // sécurité dans le code du Worker. Voir l'ADR.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "frogstation",
+  "compatibility_date": "2026-09-26",
+  "assets": {
+    // Sortie de `npm run build` (vite). Contient index.html, 404.html,
+    // assets/* et _headers recopié depuis public/.
+    "directory": "./dist",
+    // Sert dist/404.html avec un vrai statut HTTP 404 sur les chemins inconnus,
+    // ce qui évite tout routeur côté client (cf. README, décisions techniques).
+    "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

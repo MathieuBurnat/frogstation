@@ -1,11 +1,26 @@
-# En-têtes de sécurité — audit FRO-4 (S-02).
-# Cloudflare Pages lit ce fichier automatiquement ; Vite le copie tel quel dans dist/.
+# En-têtes de sécurité — audit FRO-4 (S-02), durcissé par FRO-23.
+#
+# Mécanisme : le déploiement retenu est un Worker Cloudflare servant des assets
+# statiques (voir documents/adr/0001-cloudflare-workers-plutot-que-pages.md).
+# Workers Static Assets lit ce fichier, tout comme Cloudflare Pages ; Vite le
+# copie tel quel depuis public/ dans dist/, qui est le répertoire d'assets.
+#
+# ⚠️ Limite documentée par Cloudflare : ces en-têtes s'appliquent aux réponses
+# servies par les assets statiques, PAS aux réponses générées par du code de
+# Worker. Le site n'a aucun code de Worker (wrangler.jsonc n'a pas de `main`),
+# donc toutes les réponses passent par ici. Si un jour un script de Worker est
+# ajouté, ces en-têtes devront être reposés dans le code du Worker.
 #
 # Pour élargir la politique (formulaire de contact tiers, polices ou images
 # externes), ajouter l'origine à la directive concernée — connect-src,
 # form-action, font-src, img-src — et NON à default-src.
+#
+# `style-src 'self'` sans 'unsafe-inline' : vérifié sur le build de production,
+# aucun style inline n'est émis (le CSS est extrait dans dist/assets/*.css).
+# `object-src 'none'` : aucun plugin/embed utilisé, on le dit explicitement
+# plutôt que de l'hériter de default-src.
 /*
-  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains
