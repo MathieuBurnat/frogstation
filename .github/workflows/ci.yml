@@ -1,4 +1,4 @@
-# Garde-fous automatiques sur chaque PR — audit FRO-4 (S-05).
+# Garde-fous automatiques sur chaque PR — audit FRO-4 (S-05), durci par FRO-23.
 name: CI
 
 on:
@@ -16,13 +16,25 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ⚠️ L'identifiant de ce job (`verify`) est le nom du check requis par la
+  # protection de branche sur `main`. Volontairement pas de `name:` ici : un nom
+  # d'affichage changerait le nom du check et casserait silencieusement la
+  # protection de branche (le check requis ne remonterait jamais).
   verify:
-    name: audit · typecheck · lint · build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Actions épinglées à un SHA de commit complet : un tag est déplaçable,
+      # un SHA non (FRO-23, P-02). Le commentaire donne la version lisible ;
+      # Dependabot sait mettre à jour ce couple SHA + commentaire.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@v4
+      # Vérifie l'épinglage de *toutes* les actions de .github/, y compris les
+      # workflows futurs (déploiement Cloudflare notamment). Placé avant toute
+      # autre étape : rien d'autre ne tourne si la chaîne n'est pas figée.
+      - name: actions épinglées à un SHA
+        run: ./scripts/check-action-pins.sh
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
           cache: npm
