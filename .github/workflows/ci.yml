@@ -16,8 +16,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # ⚠️ L'identifiant de ce job (`verify`) est publié tel quel comme nom de check,
+  # et c'est le contexte exigé par la protection de branche sur `main` (FRO-23).
+  # Volontairement pas de `name:` ici : un nom d'affichage remplacerait le nom du
+  # check, le contexte `verify` ne remonterait jamais, et le statut global de
+  # chaque PR resterait `pending` pour toujours — donc plus aucune fusion
+  # possible (FRO-26). Renommer ce job = casser silencieusement la protection.
   verify:
-    name: audit · typecheck · lint · build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
